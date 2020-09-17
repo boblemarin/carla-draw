@@ -12,7 +12,8 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if( request.message === "open_new_tab" ) {
       // online version
-      chrome.tabs.create({"url": "http://amis.minimal.be/carla/?q=" + request.url});
+      //chrome.tabs.create({"url": "http://amis.minimal.be/carla/?q=" + request.url});
+      chrome.tabs.create({"url": "https://boblemarin.github.io/carla-draw/?q=" + request.url});
 
       // Local versions that don't work because no script in bundled html files, okay
       /*
