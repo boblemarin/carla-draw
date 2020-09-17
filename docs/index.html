@@ -90,7 +90,7 @@
   <canvas class="fs" id="drawCanvas"></canvas>
   <canvas class="fs" id="tempCanvas"></canvas>
   <section class="menu">
-    <div class="menu-item menu-new" onclick="menuNew()"></div>
+    <!-- <div class="menu-item menu-new" onclick="menuNew()"></div> -->
     <div class="menu-item menu-save" onclick="menuSave()"></div>
     <div class="menu-separator"></div>
     <div class="menu-item menu-preview" onclick="menuPreview()"></div>
@@ -113,6 +113,7 @@
       dirty = false,
       tdirty = false,
       lineWidth = 3,
+      saved = false,
       lineColor = "white";
 
   cv.width = tcv.width = width;
@@ -121,6 +122,9 @@
   document.querySelector('.menu').addEventListener('mousedown',onMenuMouseDown);
   document.addEventListener('mousedown', onMouseDown);
   window.addEventListener('keydown',onKeyDown);
+  window.onbeforeunload = function(event) {
+    if (!saved) return "oui";
+  }
   requestAnimationFrame(draw);
 
   if (window.location.search.startsWith('?q=')) {
@@ -164,7 +168,7 @@
       var datestring = d.getFullYear() + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2) + " " + ("0" + d.getHours()).slice(-2) + "-" + ("0" + d.getMinutes()).slice(-2);
       
       download(datestring + ".svg", svg);
-
+      saved = true;
       // console.log(svg);
     }
   }
