@@ -2,6 +2,6 @@
 
 # Carla-Draw
 
-A Chromium extension that allows to draw on existing image, and exporting SVG files.
+A Chromium extension that allows to draw on existing image, and exporting SVG files. Now the power is yours.
 
 
