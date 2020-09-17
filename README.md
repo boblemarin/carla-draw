@@ -4,6 +4,6 @@
 
 A Chromium extension that allows to draw on existing image, and exporting SVG files. 
 
-<img src="https://github.com/boblemarin/carla-draw/find/master" />
+<img src="https://github.com/boblemarin/carla-draw/raw/master/docs/example.png" />
 
 Now the power is yours.
