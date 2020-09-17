@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="shortcut icon" href="icon.png">  
+  <head>
+    <title>Carla Draw</title>
+
+    <style type="text/css">
+    html { box-sizing: border-box; }
+    *, *:before, *:after { box-sizing: inherit; }
+
+    html, body { height: 100%; }
+
+    body {
+      background-color: #888;
+      margin: 0;
+      color: black;
+      font-family: Helvetica;
+      overflow: hidden;
+      cursor: crosshair;
+    }
+    .fs {
+      position: absolute;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    #sourceDiv {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      top: 10px;
+      bottom: 10px;
+      pointer-events: none;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+    .menu {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 42px;
+    }
+    .menu-item {
+      width: 42px;
+      height: 42px;
+      margin-bottom: 4px;
+      background-color: white;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: 20px 20px;
+      border-radius: 50% 50%;
+      border: 4px solid grey;
+      cursor: pointer;
+    }
+    .menu-item:hover {
+      border: 4px solid black;
+    }
+    .menu-separator {
+      width: 42px;
+      height: 84px;
+    }
+    .menu-black {
+      background-color: black;
+    }
+    .menu-white {
+      background-color: white;
+    }
+    .menu-new {
+      background-image: url(menu-new.png);
+    }
+    .menu-save {
+      background-image: url(menu-save.png);
+    }
+    .menu-preview {
+      background-image: url(menu-preview.png);
+    }
+    .invisible {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="sourceDiv"></div>
+  <canvas class="fs" id="drawCanvas"></canvas>
+  <canvas class="fs" id="tempCanvas"></canvas>
+  <section class="menu">
+    <div class="menu-item menu-new" onclick="menuNew()"></div>
+    <div class="menu-item menu-save" onclick="menuSave()"></div>
+    <div class="menu-separator"></div>
+    <div class="menu-item menu-preview" onclick="menuPreview()"></div>
+    <div class="menu-item menu-black" onclick="menuBlack()"></div>
+    <div class="menu-item menu-white" onclick="menuWhite()"></div>
+  </section>
+  
+  <script type="text/javascript">
+  let cv = document.getElementById('drawCanvas'),
+      ctx = cv.getContext('2d'),
+      tcv = document.getElementById('tempCanvas'),
+      tctx = tcv.getContext('2d'),
+      isMouseDown = false,
+      currentStroke = [],
+      strokes = [],
+      redoStrokes = [],
+      sourceImageURL = "",
+      width = window.innerWidth,
+      height = window.innerHeight,
+      dirty = false,
+      tdirty = false,
+      lineWidth = 3,
+      lineColor = "white";
+
+  cv.width = tcv.width = width;
+  cv.height = tcv.height = height;
+
+  document.querySelector('.menu').addEventListener('mousedown',onMenuMouseDown);
+  document.addEventListener('mousedown', onMouseDown);
+  window.addEventListener('keydown',onKeyDown);
+  requestAnimationFrame(draw);
+
+  if (window.location.search.startsWith('?q=')) {
+    loadImage(window.location.search.substring(3));
+    // document.querySelector('#sourceDiv').style.backgroundImage = 'url('+window.location.search.substring(3)+')';
+  }
+
+
+  function menuNew() {
+    redoStrokes.length = 0;
+    strokes.length = 0;
+    currentStroke.length = 0;
+    dirty = true;
+    tdirty = true;
+    //sourceImageURL = prompt('Image URL');
+    // document.querySelector('#sourceDiv').style.backgroundImage = 'url('+sourceImageURL+')';
+  }
+  function loadImage(url) {
+    document.querySelector('#sourceDiv').style.backgroundImage = 'url('+url+')';
+  }
+  function menuSave() {
+    if (strokes.length) {
+      let svg = '<svg width="'+width+'pt" height="'+height+'pt" viewBox="0 0 '+width+' '+height+'" xmlns="http://www.w3.org/2000/svg" stroke="blue" fill="none">';
+      strokes.forEach(function(stroke) {
+        let first = true;
+        stroke.forEach(function(pos) {
+          if (first) {
+            first = false;
+            svg += '<path d="M' + pos[0] + ',' + pos[1];
+          } else {
+            svg += ' L' + pos[0] + ',' + pos[1];
+          }
+        });
+        svg += '"/>';
+      });
+      svg += '</svg>';
+
+
+      var d = new Date();
+
+      var datestring = d.getFullYear() + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2) + " " + ("0" + d.getHours()).slice(-2) + "-" + ("0" + d.getMinutes()).slice(-2);
+      
+      download(datestring + ".svg", svg);
+
+      // console.log(svg);
+    }
+  }
+
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+
+  function menuPreview() {
+    document.querySelector('#sourceDiv').classList.toggle("invisible");
+  }
+  function menuBlack() {
+    lineColor = "black";
+    dirty = true;
+    tdirty = true;
+  }
+  function menuWhite() {
+    lineColor = "white";
+    dirty = true;
+    tdirty = true;
+  }
+
+  function onMenuMouseDown(event) {
+    event.stopImmediatePropagation();
+  }
+  function onMouseDown(event) {
+    console.log('down');
+    isMouseDown = true;
+    redoStrokes.length = 0;
+    currentStroke = [[event.pageX, event.pageY]];
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  }
+
+  function onMouseMove(event) {
+    console.log('move');
+    if (isMouseDown) {
+      currentStroke.push([event.pageX, event.pageY]);
+      tdirty = true;
+    }
+  }
+
+  function onMouseUp(event) {
+    console.log('up');
+    if (isMouseDown) {
+      isMouseDown = false;
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      if (currentStroke.length > 1) {
+        strokes.push(currentStroke);
+        currentStroke = [];
+        dirty = true;
+        tdirty = true;
+      }
+    }
+  }
+
+  function onKeyDown(event) {
+    switch(event.keyCode) {
+      case 8: // backspace, undo/redo
+        if (event.shiftKey) redo();
+        else undo();
+        break;
+
+      default: 
+        console.log(event.keyCode);
+    };
+  }
+
+  function draw() {
+    if (dirty) {
+      cv.width = width;
+      cv.height = height;
+      ctx.lineWidth = lineWidth;
+      ctx.strokeStyle = lineColor;
+      strokes.forEach(function(stroke) {
+        let first = true;
+        stroke.forEach(function(pos) {
+        if (first) {
+          ctx.moveTo(pos[0],pos[1]);
+          first = false;
+        } else {
+          ctx.lineTo(pos[0],pos[1]);
+        }
+        });
+      });
+      ctx.stroke();
+      dirty = false;
+    }
+
+    if (tdirty) {
+      tcv.width = width;
+      tcv.height = height;
+      tctx.lineWidth = lineWidth;
+      tctx.strokeStyle = lineColor;
+      let first = true;
+      currentStroke.forEach(function(pos) {
+        if (first) {
+          tctx.moveTo(pos[0],pos[1]);
+          first = false;
+        } else {
+          tctx.lineTo(pos[0],pos[1]);
+        }
+      });
+      tctx.stroke();
+      tdirty = false;
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  function undo() {
+    if (strokes.length) {
+      redoStrokes.push(strokes.pop());
+      dirty = true;
+    }
+  }
+
+  function redo() {
+    if (redoStrokes.length) {
+      strokes.push(redoStrokes.pop());
+      dirty = true;
+    }
+  }
+
+  </script>
+</body>
+</html>
