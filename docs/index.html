@@ -147,7 +147,7 @@
   }
   function menuSave() {
     if (strokes.length) {
-      let svg = '<svg width="'+width+'pt" height="'+height+'pt" viewBox="0 0 '+width+' '+height+'" xmlns="http://www.w3.org/2000/svg" stroke="blue" fill="none">';
+      let svg = '<svg x="0px" y="0px" viewBox="0 0 '+width+' '+height+'" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" stroke="blue" fill="none">';
       strokes.forEach(function(stroke) {
         let first = true;
         stroke.forEach(function(pos) {
