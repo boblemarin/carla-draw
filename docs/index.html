@@ -159,11 +159,11 @@
         let minX = 9999, maxX = 0, minY = 9999, maxY = 0;
         // loop scan
         strokes.forEach(function(stroke) {
-          stroke.forEarch(function(point) {
+          stroke.forEach(function(point) {
             minX = Math.min(minX, point[0]);
-            maxX = Math.min(maxX, point[0]);
+            maxX = Math.max(maxX, point[0]);
             minY = Math.min(minY, point[1]);
-            maxY = Math.min(maxY, point[1]);
+            maxY = Math.max(maxY, point[1]);
           });
         });
         // add borders
