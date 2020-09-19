@@ -132,7 +132,8 @@
   requestAnimationFrame(draw);
 
   if (window.location.search.startsWith('?q=')) {
-    loadImage(window.location.search.substring(3));
+    sourceImageURL = window.location.search.substring(3);
+    loadImage(sourceImageURL);
     // document.querySelector('#sourceDiv').style.backgroundImage = 'url('+window.location.search.substring(3)+')';
   }
 
@@ -155,6 +156,7 @@
     } else {
       if (strokes.length) {
         let svg = '<svg x="0px" y="0px" viewBox="0 0 '+width+' '+height+'" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" stroke="blue" fill="none">';
+        svg += '<!-- ' + sourceImageURL + ' -->'
         strokes.forEach(function(stroke) {
           let first = true;
           stroke.forEach(function(pos) {
