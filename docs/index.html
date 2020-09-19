@@ -155,16 +155,33 @@
       menuNew();
     } else {
       if (strokes.length) {
-        let svg = '<svg x="0px" y="0px" viewBox="0 0 '+width+' '+height+'" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" stroke="blue" fill="none">';
+        // trim image content
+        let minX = 9999, maxX = 0, minY = 9999, maxY = 0;
+        // loop scan
+        strokes.forEach(function(stroke) {
+          stroke.forEarch(function(point) {
+            minX = Math.min(minX, point[0]);
+            maxX = Math.min(maxX, point[0]);
+            minY = Math.min(minY, point[1]);
+            maxY = Math.min(maxY, point[1]);
+          });
+        });
+        // add borders
+        minX -= 50;
+        maxX += 50;
+        minY -= 50;
+        maxY += 50;
+        // generate SVG code
+        let svg = '<svg x="0px" y="0px" viewBox="0 0 '+(maxX - minX)+' '+(maxY - minY)+'" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" stroke="blue" fill="none">';
         svg += '<!-- ' + sourceImageURL + ' -->'
         strokes.forEach(function(stroke) {
           let first = true;
           stroke.forEach(function(pos) {
             if (first) {
               first = false;
-              svg += '<path d="M' + pos[0] + ',' + pos[1];
+              svg += '<path d="M' + (pos[0]-minX) + ',' + (pos[1]-minY);
             } else {
-              svg += ' L' + pos[0] + ',' + pos[1];
+              svg += ' L' + (pos[0]-minX) + ',' + (pos[1]-minY);
             }
           });
           svg += '"/>';
