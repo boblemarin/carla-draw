@@ -229,6 +229,12 @@
   }
 
   function onMouseDown(event) {
+    if (isMouseDown && currentStroke.length > 1) {
+      strokes.push(currentStroke);
+      currentStroke = [];
+      dirty = true;
+      tdirty = true;
+    }
     // console.log('down');
     isMouseDown = true;
     redoStrokes.length = 0;
@@ -243,8 +249,6 @@
   function onRightMouseDown(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
-    console.log("no right click here");
-
     return false;
   }
 
