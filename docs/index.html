@@ -125,6 +125,7 @@
 
   document.querySelector('.menu').addEventListener('mousedown',onMenuMouseDown);
   document.addEventListener('mousedown', onMouseDown);
+  document.addEventListener('contextmenu', onRightMouseDown, false);
   window.addEventListener('keydown',onKeyDown);
   window.onbeforeunload = function(event) {
     if (!saved) return "oui";
@@ -237,6 +238,14 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+  }
+
+  function onRightMouseDown(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    console.log("no right click here");
+
+    return false;
   }
 
   function onMouseMove(event) {
