@@ -19,7 +19,6 @@ chrome.runtime.onMessage.addListener(
 
 function onClickInDocument(event) {
   if (event.target.tagName == 'IMG' ){
-    //document.body.style.cursor = 'default';
     document.removeEventListener("mousedown", onClickInDocument);
     document.head.removeChild(styleEl);
     console.log(event.target.src);

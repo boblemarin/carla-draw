@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" href="icon.png">  
+    <title>Carla Draw</title>
+    <link rel="stylesheet" type="text/css" href="drawing.css">
+  </head>
+  <body>
+    <div id="sourceDiv"></div>
+    <canvas class="fs" id="drawCanvas"></canvas>
+    <canvas class="fs" id="tempCanvas"></canvas>
+    <section class="menu">
+      <div class="menu-item menu-save" id="menuSaveBtn" title="Download SVG file (Shift + Click = open image by URL)"></div>
+      <div class="menu-item menu-undo" id="menuUndoBtn" title="Undo (Shift+Click = redo)"></div>
+      <div class="menu-item menu-preview" id="menuPreviewBtn" title="Toggle original image"></div>
+      <div class="menu-separator"></div>
+      <div class="menu-item menu-black" id="menuBlackBtn" title="Black stroke"></div>
+      <div class="menu-item menu-white" id="menuWhiteBtn" title="White stroke"></div>
+    </section>
+    <script type="text/javascript" src="drawing.js"></script>
+  </body>
+</html>
