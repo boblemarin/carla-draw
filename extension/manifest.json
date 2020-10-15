@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Carla Draw",
-  "description": "Allows drawing on existing images and saving as SVG file",
+  "description": "Allows drawing on existing images and saving a nice picture (in SVG format)",
   "version": "0.1",
   "icons": { "128": "icon128.png" },
   "content_scripts": [
