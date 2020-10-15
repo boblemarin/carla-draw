@@ -1,21 +1,10 @@
 var styleEl = document.createElement('style');
 
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if( request.message === "clicked_browser_action" ) {
-      // TODO: insertRule into style sheet to give better visual feedback
-      // document.head.appendChild(styleEl);
-      styleEl = document.createElement('style');
-      document.head.appendChild(styleEl);
-      var styleSheet = styleEl.sheet;
-      styleSheet.insertRule('img:hover { border: 15px dotted red; cursor: crosshair; box-sizing: border-box;}', 0);
-
-
-      //document.body.style.cursor = "crosshair";
-      document.addEventListener("mousedown", onClickInDocument);
-    }
-  }
-);
+styleEl = document.createElement('style');
+document.head.appendChild(styleEl);
+var styleSheet = styleEl.sheet;
+styleSheet.insertRule('img:hover { border: 15px dotted red; cursor: crosshair; box-sizing: border-box;}', 0);
+document.addEventListener("mousedown", onClickInDocument);
 
 function onClickInDocument(event) {
   if (event.target.tagName == 'IMG' ){
