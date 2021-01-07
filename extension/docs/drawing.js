@@ -30,7 +30,7 @@ document.addEventListener('mousedown', onMouseDown);
 document.addEventListener('contextmenu', onRightMouseDown, false);
 window.addEventListener('keydown',onKeyDown);
 window.onbeforeunload = function(event) {
-  if (!saved) return "oui";
+  if (!saved && strokes.length > 0) return "oui";
 }
 requestAnimationFrame(draw);
 

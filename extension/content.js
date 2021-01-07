@@ -8,6 +8,8 @@ document.addEventListener("mousedown", onClickInDocument);
 
 function onClickInDocument(event) {
   if (event.target.tagName == 'IMG' ){
+    event.preventDefault();
+    event.stopImmediatePropagation();
     document.removeEventListener("mousedown", onClickInDocument);
     document.head.removeChild(styleEl);
     console.log(event.target.src);
