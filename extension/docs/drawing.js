@@ -75,8 +75,9 @@ function menuSave(event) {
       minY -= 50;
       maxY += 50;
       // generate SVG code
-      let svg = '<svg x="0px" y="0px" viewBox="0 0 '+(maxX - minX)+' '+(maxY - minY)+'" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" stroke="black" stroke-width="3" fill="none">';
-      svg += '<!-- ' + sourceImageURL + ' -->'
+      let svg = '<svg x="0px" y="0px" viewBox="0 0 '+(maxX - minX)+' '+(maxY - minY)+'" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" stroke="black" stroke-width="3" fill="none"';
+      svg += 'imageReference="' + encodeURIComponent(sourceImageURL) + '" imageGenerator="CarlaDraw">'
+
       strokes.forEach(function(stroke) {
         let first = true;
         stroke.forEach(function(pos) {
