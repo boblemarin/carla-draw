@@ -2,7 +2,7 @@
 
 # Carla-Draw
 
-A Chromium extension that allows to draw on existing image, and export an SVG files. 
+A Chromium extension that allows to draw on existing image, and export an SVG file. 
 
 ## Usage
 
@@ -16,6 +16,7 @@ A new tab will be created with a simple drawing interface, and the chosen image 
 - show / hide start image
 - undo / redo system (undo with backspace, redo with shift+backspace)
 - save as SVG
+- reference image URL is inserted into the xml file
 
 <img src="https://github.com/boblemarin/carla-draw/raw/master/docs/example.png" />
 
